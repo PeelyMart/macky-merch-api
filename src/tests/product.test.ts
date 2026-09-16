@@ -89,6 +89,35 @@ it("returns 400 if the price is negative", async () => {
 
 }); 
 
+describe("GET /api/products", () => {
+  it("returns all products", async () => {
+    await request(app)
+      .post("/api/products")
+      .send({
+        name: "Gaming Mouse",
+        category: "Electronics",
+        stock: 10,
+        price: 100,
+      });
+
+    await request(app)
+      .post("/api/products")
+      .send({
+        name: "Keyboard",
+        category: "Electronics",
+        stock: 5,
+        price: 200,
+      });
+
+    const res = await request(app)
+      .get("/api/products");
+
+    expect(res.status).toBe(200);
+    console.log("======== GET TEST RESULT ======= RETRIEVED: =====");
+    console.log(res.body);
+  });
+});
+
 
 
 
