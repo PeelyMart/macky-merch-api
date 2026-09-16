@@ -81,13 +81,6 @@ export const getProduct= async(
   res: Response,
 ): Promise<void> => {
   
-  /* TODO: 
-   * retrive a  product with req.param.id
-   * return 200 OK + product
-   * 404 NOT FOUND 
-   * 500 Internal Server Error
-   */ 
-
   try{
     const { id } = req.params;
     if(!mongoose.Types.ObjectId.isValid(id)){
