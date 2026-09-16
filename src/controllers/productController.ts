@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import IProduct from "../interfaces/IProducts"
-import {skuGenerate} from "../util/skuGenerator"
-import Product from "../models/products"
-
+import IProduct from "../interfaces/IProducts";
+import {skuGenerate} from "../util/skuGenerator";
+import Product from "../models/products";
+import mongoose from "mongoose";
 /* All in one input validation for updates and creates 
  *
  * if update isNew = false 
@@ -86,7 +86,29 @@ export const getProduct= async(
    * return 200 OK + product
    * 404 NOT FOUND 
    * 500 Internal Server Error
-   */
+   */ 
+
+  try{
+    const { id } = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      res.status(400).json({message: "Invalid Product ID",});
+      return;
+    } 
+
+    const product = await Product.findById(id);
+
+    if(!product){
+      res.status(404).json({message:"Product not found",});
+      return;
+    } 
+
+    res.status(200).json(product);
+  }catch(error){
+    console.log(error);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
 
 }; 
 

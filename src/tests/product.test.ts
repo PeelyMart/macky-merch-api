@@ -116,6 +116,45 @@ describe("GET /api/products", () => {
     console.log("======== GET TEST RESULT ======= RETRIEVED: =====");
     console.log(res.body);
   });
+}); 
+
+
+describe("GET /api/products/:id", () => {
+  it("returns a product by id", async () => {
+    const created = await request(app)
+      .post("/api/products")
+      .send({
+        name: "Gaming Mouse",
+        category: "Electronics",
+        stock: 10,
+        price: 100,
+      });
+
+    const productId = created.body._id;
+
+    const res = await request(app)
+      .get(`/api/products/${productId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body._id).toBe(productId);
+    expect(res.body.name).toBe("Gaming Mouse");
+  });
+
+    it("returns 404 when product does not exist", async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .get(`/api/products/${fakeId}`);
+
+    expect(res.status).toBe(404);
+  });
+
+  it("returns 400 for an invalid id", async () => {
+  const res = await request(app)
+    .get("/api/products/not-a-real-id");
+
+  expect(res.status).toBe(400);
+});
 });
 
 
