@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import IProduct from "../interfaces/IProducts"
-import skuGenerator from "../util/skuGenerator"
-
+import {skuGenerate} from "../util/skuGenerator"
+import Product from "../models/products"
 
 /* All in one input validation for updates and creates 
  *
@@ -38,29 +38,26 @@ export const createProduct = async(
   res: Response,
 ): Promise<void> => {
 
-  //TODO:
-  //create product
-  //  create null checks
-  //  create datatype checks
-  //  price should be positive
-  //create appropriate responses
-  //  success: 201 + productObject
-  //  fail(validation): 400 bad request
-  //  fail(catch-all): 500 Internal Server error 
-  
   const product = req.body as IProduct;
   const error = validateProduct(product, true); 
   
-  if(error){
+  if(error.length > 0 ){
     return res.status(400).json({
       message: error,
     });
   } 
 
+  product.sku = skuGenerate(product);  
+  
+  const createdProd = await Product.create(product);
+  
+  if(createdProd){
+    return res.status(201).json(createdProd);
+  } 
 
-
-
-
+  return res.status(500).json({
+    message: "Unexpected error",
+  })
 };
 
 export const getProducts = async(
