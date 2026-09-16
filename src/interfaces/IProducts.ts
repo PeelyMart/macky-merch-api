@@ -4,8 +4,8 @@ export interface IProduct {
   stock: number;
   category: string;
 
-  sku: string;
-  description: string;
+  sku?: string; //sku is generated right before it is uploaded
+  description?: string; //some items may not need a description
 
   isAvailable: boolean;
 

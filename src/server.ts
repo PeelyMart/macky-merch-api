@@ -22,21 +22,7 @@ const startServer = async(): Promise<void> =>{
 
     app.listen(PORT, () => {
       console.log(`Server lisening on ${PORT}`);
-    }) 
-
-    const testProduct = await Product.create({
-      name: "TestHoodie",
-      price: 1200, 
-      stock: 10,
-      sku: "test-Sku-123",
-      category: "Clothing",
-      description: "Official LSCS Hoodie"
     }); 
-
-    console.log(testProduct);
-
-
-
 
   }catch(error){
     console.error("Failed to connect to MongoDB");
