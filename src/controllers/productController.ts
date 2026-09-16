@@ -118,7 +118,53 @@ export const updateProduct = async(
    * 404 = Not found 
    * 400 = invalid data
    * 500 = catch all 
-   */
+   */ 
+  try {
+      const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({
+          message: "Invalid Product ID",
+        });
+        return;
+      }
+
+      const existingProduct = await Product.findById(id);
+
+      if (!existingProduct) {
+        res.status(404).json({
+          message: "Product not found",
+        });
+        return;
+      }
+
+      const updatedData = {
+        ...existingProduct.toObject(),
+        ...req.body,
+      };
+
+      const errors = validateProduct(updatedData, false);
+
+      if (errors.length > 0) {
+        res.status(400).json({
+          message: errors,
+        });
+        return;
+      }
+
+      const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        req.body,
+        { new: true }
+      );
+
+      res.status(200).json(updatedProduct);
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal Server Error",
+      });
+  }
 };
 
 
