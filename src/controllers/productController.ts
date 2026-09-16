@@ -179,7 +179,38 @@ export const deleteProduct = async(
    * 200 OK 
    * 404 if not found
    * 500 = catch all
-   */
+   */ 
+ try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({
+        message: "Invalid Product ID",
+      });
+      return;
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      res.status(404).json({
+        message: "Product not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Product deleted",
+      body: deletedProduct,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
 
 };
 

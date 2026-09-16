@@ -230,7 +230,62 @@ describe("PUT /api/products/:id", () => {
   });
 });
 
+describe("DELETE /api/products/:id", () => {
+  it("deletes a product", async () => {
+    const created = await request(app)
+      .post("/api/products")
+      .send({
+        name: "Gaming Mouse",
+        category: "Electronics",
+        stock: 10,
+        price: 100,
+      });
 
+    const productId = created.body._id;
+
+    const res = await request(app)
+      .delete(`/api/products/${productId}`);
+
+    expect(res.status).toBe(200);
+  });
+
+  it("returns 404 when product does not exist", async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .delete(`/api/products/${fakeId}`);
+
+    expect(res.status).toBe(404);
+  });
+
+  it("returns 400 for an invalid id", async () => {
+    const res = await request(app)
+      .delete("/api/products/not-a-real-id");
+
+    expect(res.status).toBe(400);
+  }); 
+
+  it("returns 404 removes the product from the database (delete then try to get it)", async () => {
+    const created = await request(app)
+      .post("/api/products")
+      .send({
+        name: "Gaming Mouse",
+        category: "Electronics",
+        stock: 10,
+        price: 100,
+      });
+
+    const productId = created.body._id;
+
+    await request(app)
+      .delete(`/api/products/${productId}`);
+
+    const res = await request(app)
+      .get(`/api/products/${productId}`);
+
+    expect(res.status).toBe(404);
+  });
+});
 
 
 
