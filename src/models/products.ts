@@ -32,13 +32,12 @@ const productsSchema = new Schema<IProduct>(
 
     description: {
       type: String,
-      required: true,
     }, 
 
     color: {
       type: String
     }, 
-
+ 
     size: {
         type: String
     }, 

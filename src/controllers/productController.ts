@@ -1,4 +1,36 @@
 import {Request, Response} from "express";
+import IProduct from "../interfaces/IProducts"
+import skuGenerator from "../util/skuGenerator"
+
+
+/* All in one input validation for updates and creates 
+ *
+ * if update isNew = false 
+ * if create isNew = true
+ *
+ */
+function validateProduct(product: IProduct, isNew: boolean): string[]{
+  const errors: string[] = []; 
+  if(!product.name){
+    errors.push("Name is empty");
+  }
+  if(!product.price){
+    errors.push("Price is empty");
+  }
+  if(!product.stock){
+    errors.push("Stock is empty"); 
+  }
+  if(!product.category){
+    errors.push("Category is empty");
+  }
+  if(product.price < 0 ){
+    errors.push("Product must have a positive value");
+  } 
+  if(!product.sku && !isNew){
+    errors.push("This is a pre-existing product being updated, it should have an SKU");
+  } 
+  return errors;
+}
 
 
 export const createProduct = async(
@@ -14,7 +46,20 @@ export const createProduct = async(
   //create appropriate responses
   //  success: 201 + productObject
   //  fail(validation): 400 bad request
-  //  fail(catch-all): 500 Internal Server error
+  //  fail(catch-all): 500 Internal Server error 
+  
+  const product = req.body as IProduct;
+  const error = validateProduct(product, true); 
+  
+  if(error){
+    return res.status(400).json({
+      message: error,
+    });
+  } 
+
+
+
+
 
 };
 
