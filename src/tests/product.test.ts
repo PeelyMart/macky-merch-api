@@ -5,7 +5,7 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose"
 
 
-let mongoServer = MongoMemoryServer;
+let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();

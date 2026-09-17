@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import IProduct from "../interfaces/IProducts";
+import {IProduct} from "../interfaces/IProducts";
 import {skuGenerate} from "../util/skuGenerator";
 import Product from "../models/products";
 import mongoose from "mongoose";
@@ -42,9 +42,10 @@ export const createProduct = async(
   const error = validateProduct(product, true); 
   
   if(error.length > 0 ){
-    return res.status(400).json({
+    res.status(400).json({
       message: error,
-    });
+    }); 
+    return;
   } 
 
   product.sku = skuGenerate(product);  
@@ -52,12 +53,14 @@ export const createProduct = async(
   const createdProd = await Product.create(product);
   
   if(createdProd){
-    return res.status(201).json(createdProd);
+    res.status(201).json(createdProd);
+    return;
   } 
 
-  return res.status(500).json({
+  res.status(500).json({
     message: "Unexpected error",
-  })
+  });
+  return;
 };
 
 export const getProducts = async(
@@ -82,7 +85,7 @@ export const getProduct= async(
 ): Promise<void> => {
   
   try{
-    const { id } = req.params;
+    const  id  = req.params.id as string;
     if(!mongoose.Types.ObjectId.isValid(id)){
       res.status(400).json({message: "Invalid Product ID",});
       return;
@@ -120,7 +123,7 @@ export const updateProduct = async(
    * 500 = catch all 
    */ 
   try {
-      const { id } = req.params;
+      const  id  = req.params.id as string;
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400).json({
@@ -173,15 +176,9 @@ export const deleteProduct = async(
   res: Response,
 ): Promise<void> => {
 
-  /* TODO: 
-   *
-   * find product to delete
-   * 200 OK 
-   * 404 if not found
-   * 500 = catch all
-   */ 
+ 
  try {
-    const { id } = req.params;
+    const  id  = req.params.id as string;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({
