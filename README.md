@@ -18,6 +18,8 @@ At this moment, this repo is does not come with a docker file, please run `npm i
 
   This API is powered by MongoDB's free version of the Atlas database, it is a cloud hosted program giving us around half a gigabyte of storage. To connect, you will have to set up your `.env` file through this google drive link. (Accessible to anyone with a DLSU email account). Please install/copy the contents of the env especially the `MONGO_URI` section. 
   
+  link: https://drive.google.com/drive/folders/1uVFlyDwtdJJYr9SqvuOtfxr0OOnUfA-C
+  
   #### The `.env` file.
 
   There are only two fields used in this file, `PORT` and `MONGO_URI`. As the name suggests this is where you will put your PORT number, for MAC users I personally encountered a problem with port 3000 since sometimes apple-services run on that port I suggest changing it around to whatever works. `MONGO_URI` -- is given by the google drive link above.
