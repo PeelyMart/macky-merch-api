@@ -22,6 +22,8 @@ At this moment, this repo is does not come with a docker file, please run `npm i
 
   There are only two fields used in this file, `PORT` and `MONGO_URI`. As the name suggests this is where you will put your PORT number, for MAC users I personally encountered a problem with port 3000 since sometimes apple-services run on that port I suggest changing it around to whatever works. `MONGO_URI` -- is given by the google drive link above.
 
+  Please run `npm run build` command and check that a `dist/` directory has been created  
+
 
   The server should run with an `npm start` command 
 
