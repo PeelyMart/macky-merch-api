@@ -1,127 +1,173 @@
-## Setup and Installation
+# Setup and Installation
 
-Please install from the `MAIN` branch, this is where all features are integrated. 
+Please install from the `MAIN` branch, as this is where all features are integrated.
 
-At this moment, this repo is does not come with a docker file, please run `npm install` to install needed dependencies.  
+At this moment, this repo does not come with a Dockerfile. Please run the following command to install the needed dependencies:
 
-### For remote testing, locally run.
+```bash
+npm install
+```
 
-  One of the core testing dependencies is `mongodb-memory-server` (should be installed during the install command) this makes the testing scripts run on a temporary server so that redundant testing data  does not waste the limited space on the `mongodb-atlas` cloud server. 
+## For Remote Testing
 
-  This testing is run through `npm test` powered by `vitest` please see `package-lock.json` for version information. Test files are found under `src/tests/product.test.ts`. This file tests all CRUD operations listed in the specifications of the document + other edge cases I thought were important. 
+Locally run the following command for testing:
 
+```bash
+npm test
+```
 
-  At this point, it is good to run fresh after the clone and dependency installations. 
+One of the core testing dependencies is `mongodb-memory-server` (which should be installed during the installation command). This makes the testing scripts run on a temporary server, so redundant testing data does not waste the limited space on the MongoDB Atlas cloud server.
 
+This testing is powered by Vitest. Please see `package-lock.json` for version information. Test files are found under:
 
-### For connecting to the remote database 
+```text
+src/tests/product.test.ts
+```
 
-  This API is powered by MongoDB's free version of the Atlas database, it is a cloud hosted program giving us around half a gigabyte of storage. To connect, you will have to set up your `.env` file through this google drive link. (Accessible to anyone with a DLSU email account). Please install/copy the contents of the env especially the `MONGO_URI` section. 
-  
-  link: https://drive.google.com/drive/folders/1uVFlyDwtdJJYr9SqvuOtfxr0OOnUfA-C
-  
-  #### The `.env` file.
+This file tests all CRUD operations listed in the specifications document, along with other edge cases I thought were important.
 
-  There are only two fields used in this file, `PORT` and `MONGO_URI`. As the name suggests this is where you will put your PORT number, for MAC users I personally encountered a problem with port 3000 since sometimes apple-services run on that port I suggest changing it around to whatever works. `MONGO_URI` -- is given by the google drive link above.
+At this point, it is good to run the tests fresh after cloning the repository and installing the dependencies.
 
-  Please run `npm run build` command and check that a `dist/` directory has been created  
+## Connecting to the Remote Database
 
+This API is powered by MongoDB's free version of Atlas, a cloud-hosted database service giving us around half a gigabyte of storage.
 
-  The server should run with an `npm start` command 
+To connect, you will have to set up your `.env` file through this Google Drive link. It is accessible to anyone with a DLSU email account. Please install or copy the contents of the `.env` file, especially the `MONGO_URI` section.
 
-## Architectural explanation 
+Link: https://drive.google.com/drive/folders/1uVFlyDwtdJJYr9SqvuOtfxr0OOnUfA-C
 
-### File Structure
-  I chose to use the standard folder structure even with such a small project, this is to prevent future headaches with refactoring files in the case of this project growing. The standard structure also keeps it clean and makes it so that people who may be new to the repository can find things fast. 
+### The `.env` File
 
-              .
-              ├── macky-merch-api
-              │   ├── src
-              │   │   ├── controller
-              │   │   │   └── productController.ts 
-              │   │   ├── interfaces 
-              │   │   │   └── IProducts.ts
-              │   │   ├── models
-              │   │   │   └── products.ts
-              │   │   ├── routes
-              │   │   │   └── productRoutes.ts
-              │   │   ├── tests
-              │   │   │   ├── product.test.ts
-              │   │   │   └── skuGen.ts
-              │   │   └── util
-              │   │       └── skuGenerator.ts
-              │   ├── app.ts
-              │   └── server.ts
-              ├── README.md
-              ├── package.json
-              └── tsconfig.json
+There are only two fields used in this file:
 
-The code is contained within `/src` and divided into sub folders by their purpose.
+```env
+PORT=
+MONGO_URI=
+```
 
-`controller` files are who call `mongoose` to directly affect the database. These are all grouped by the same schema which is `products` 
+As the name suggests, `PORT` is where you will put your desired port number. For Mac users, I personally encountered a problem with port 3000 since sometimes Apple services run on that port. I suggest changing it to whatever works.
 
-`interfaces` are the special files needed by typescript, they give the prototype for a 'object' (not sure but, best way to describe it). Gives formal structure to the code. In this case we only deal with product objects. So IProducts.ts exists to define the fields under a product type and its defined data structure. (I realized that IProducts is not the reccommeded way of naming it, read the conventions late and found out it isnt really used in TS coding apologies). 
+`MONGO_URI` is provided through the Google Drive link above.
 
-`models` where you define the structure of the data you are manipulating. 
+Please run the build command and check that a `dist/` directory has been created:
 
-`routes` -- i am not really a fan of crowding the app.ts so I put it under the routes and just group simillar routes together, `app.ts` refers to this when the request is going to `/api/products`. `productRoutes.ts` then calls on functions defined in `controller/productController.ts` to actually process the request. Keeps the code nice and readable, easier to debug too. 
+```bash
+npm run build
+```
 
-`tests/` -- this is where i store the tests scripts for `vitest` to run. `skuGen.ts` is just a side script to test my `skuGenerator` function. 
+The server should run with the following command:
 
-`util` -- this is where I put in side functions that may be helpful somewhere else in this case it was just made for my 'skuGenerator'
+```bash
+npm start
+```
 
+# Architectural Explanation
 
+## File Structure
 
+I chose to use the standard folder structure even with such a small project. This is to prevent future headaches with refactoring files in case this project grows. The standard structure also keeps things clean and makes it easier for people who may be new to the repository to find things quickly.
 
-### skuGenerator + extra added attributes -- experimental side feature for fun 
+```text
+.
+├── macky-merch-api
+│   ├── src
+│   │   ├── controller
+│   │   │   └── productController.ts
+│   │   ├── interfaces
+│   │   │   └── IProducts.ts
+│   │   ├── models
+│   │   │   └── products.ts
+│   │   ├── routes
+│   │   │   └── productRoutes.ts
+│   │   ├── tests
+│   │   │   ├── product.test.ts
+│   │   │   └── skuGen.ts
+│   │   └── util
+│   │       └── skuGenerator.ts
+│   ├── app.ts
+│   └── server.ts
+├── README.md
+├── package.json
+└── tsconfig.json
+```
 
-  As we were told to create 2 or more extra attributes for the product schema I came up with an sku. Although MongoDB creates an id for each created item, it isn't really useful to operations who may be dealing with it. My thought is that "LSCSHOOD-CLO-WHI-EXTR-1231" is much more memorable and helpful for operations when keeping track of orders and restock compared to an arbitrary "01283102" auto generated ID. 
+The code is contained within `/src` and divided into subfolders based on their purpose.
 
-  To accomplish this, I created a helper function that feeds on the attributes of the product object including variations(color and size) to automatically create the sku.
+`controller` files are responsible for calling Mongoose to directly affect the database. These are all grouped by the same schema, which is `products`.
 
-  The first six characters are the first six letters of the name, and in a case of multi word names it takes the first two word and takes the first three characters. The next is the first three letters of the category, then the first three letters of the color, and the first three letters of the size. And lastly, to further limit the chances of an SKU collision a random UUID is generated while taking the first four digits of it and making it the last few digits. 
+`interfaces` are the special files needed by TypeScript. They give the prototype for an object (not sure, but this is the best way to describe it). They give formal structure to the code. In this case, we only deal with product objects, so `IProducts.ts` exists to define the fields under a product type and its defined data structure.
 
-  The generator takes note that color and size may be null so it will skip null fields. 
+(I realized that `IProducts` is not the recommended way of naming it. I read the conventions later and found out it isn't really used in TypeScript coding. Apologies.)
 
-  This may aid in a filter search in the front end as I tried to make it as descriptive as possible meanwhile keeping it compact. 
+`models` are where you define the structure of the data you are manipulating.
 
-#### extra attributes 
+`routes` -- I am not really a fan of crowding `app.ts`, so I put the routes under their own folder and grouped similar routes together. `app.ts` refers to this when the request is going to `/api/products`. `productRoutes.ts` then calls functions defined in `controller/productController.ts` to actually process the request.
 
-  I added these attributes with operations in mind, its more on to aid them and give more information during restocks and auditing.
+This keeps the code nice and readable and makes it easier to debug.
 
+`tests/` -- this is where I store the test scripts for Vitest to run. `skuGen.ts` is just a side script to test my `skuGenerator` function.
 
-  - description 
-  - sku (required)
-  - color 
-  - size
-  - isAvailable (defaults to true upon creation)
-  
-### Database
+`util` -- this is where I put side functions that may be helpful somewhere else. In this case, it was just made for my `skuGenerator`.
 
-  The reason why I chose a NoSQL style databse is primarily because of its flexible nature, I saw this take home challenge as something that tests how cleanly you can make a backend system like this all while dealing with the time pressure. MongoDB has been my favorite go to database for works that need to be cleanly done taking minimal set up. I specifically went out of my way to use Atlas for it to be cloud based since I am not a fan of passing around database files (annoying to version track). So TLDR: MongoDB was flexible and I did not have the time to learn something new + the free cloud.  
+## skuGenerator + Extra Added Attributes -- Experimental Side Feature for Fun
 
+As we were told to create two or more extra attributes for the product schema, I came up with an SKU.
 
+Although MongoDB creates an ID for each created item, it isn't really useful to operations teams who may be dealing with it. My thought is that `"LSCSHOOD-CLO-WHI-EXTR-1231"` is much more memorable and helpful for operations when keeping track of orders and restocking compared to an arbitrary `"01283102"` auto-generated ID.
 
-  
-### Challenges faced 
+To accomplish this, I created a helper function that feeds on the attributes of the product object, including variations (color and size), to automatically create the SKU.
 
-#### Testing
+The first six characters are the first six letters of the name. In the case of multi-word names, it takes the first two words and takes the first three characters from each. The next is the first three letters of the category, then the first three letters of the color, and the first three letters of the size.
 
-  I have never tried setting up a test script before so something new to try it too. However, through reading and searching around I eventually got it to work. Did make me realize how it easy it makes things later for simple checks if I ended up breaking something
+Lastly, to further limit the chances of an SKU collision, a random UUID is generated while taking the first four digits of it and making them the last few digits.
 
-#### Typescript adaptation
-  I dont really have much hours on typescript but found out during the lscs deployment how much it makes life easier later on, I decided to take this opportunity to spend more time with it as well. However the set up was time consuming and had to read a bit of documentation to make it work. 
+The generator takes note that color and size may be null, so it will skip null fields.
 
-#### Lost a big part of my progress. 
+This may aid in filtering searches in the frontend, as I tried to make it as descriptive as possible while keeping it compact.
 
-  During the project I accidentally did something with my repo which made me lose a ton of progress. So I had to step back a bit and search around trying to salvage as much of it as possible, luckily with quite a bit of luck and checking out previous commits I was able to get everything back. 
+### Extra Attributes
 
+I added these attributes with operations in mind. They are mainly intended to aid operations and provide more information during restocks and auditing.
 
-#### Time Pressure
-  
-  I personally had a goal to finish this in around 5-6 hours due to the other take-home challenge that I have to do, so learning some new stuff and having to work fast was definitely a challenge and also with the fatigue of coding with no breaks definitely lead to some careless mistakes which I then wasted a few more precious time to debug haha. 
+* `description`
+* `sku` (required)
+* `color`
+* `size`
+* `isAvailable` (defaults to true upon creation)
 
+# Database
 
+The reason why I chose a NoSQL-style database is primarily because of its flexible nature. I saw this take-home challenge as something that tests how cleanly you can make a backend system like this while dealing with time pressure.
+
+MongoDB has been my go-to database for work that needs to be cleanly done with minimal setup. I specifically went out of my way to use Atlas so that it could be cloud-based, since I am not a fan of passing around database files (annoying to version track).
+
+So TLDR: MongoDB was flexible, and I did not have the time to learn something new + the free cloud.
+
+# Challenges Faced
+
+## Testing
+
+I have never tried setting up a test script before, so this was something new to try. However, through reading and searching around, I eventually got it to work.
+
+It did make me realize how easy it makes things later for simple checks if I ended up breaking something.
+
+## TypeScript Adaptation
+
+I don't really have much experience with TypeScript, but I found out during the LSCS deployment how much it makes life easier later on. I decided to take this opportunity to spend more time with it as well.
+
+However, the setup was time-consuming, and I had to read a bit of documentation to make it work.
+
+## Lost a Big Part of My Progress
+
+During the project, I accidentally did something with my repo that made me lose a ton of progress. So I had to step back a bit and search around, trying to salvage as much of it as possible.
+
+Luckily, with quite a bit of luck and checking out previous commits, I was able to get everything back.
+
+## Time Pressure
+
+I personally had a goal to finish this in around 5–6 hours due to the other take-home challenge that I had to do.
+
+Learning some new stuff while having to work fast was definitely a challenge. Coding with no breaks and the fatigue that came with it definitely led to some careless mistakes, which then wasted a few more precious hours debugging, haha.
 
 
   
